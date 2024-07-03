@@ -11,18 +11,21 @@ const app = express();
  */
 import usersRoutes from './routes/users.routes.js'
 import tasksRoutes from './routes/tasks.routes.js'
+import authRouters from './routes/auth.routes.js'
 
 
 /**
  * MIDDLWARES
  */
 app.use(morgan('dev'));
+app.use(express.json()); // esta linea parsea el json enviado en el cuerpo de una peticion
 
 /**
  * Routes
  */
 app.use('/api/users',usersRoutes);
 app.use('/api/tasks',tasksRoutes);
+app.use('/api/login',authRouters);
 
 //devolvemos la app inicializada
 export default app;

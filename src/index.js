@@ -3,7 +3,7 @@
 import app from './app.js'; //-->> es obligatorio poner la extension del archivo siempre
 import 'dotenv/config'; //para establecer el puerto con variables de entorno, se utilizara DOTENV
 import logger from './logs/logger.js';
-
+import { sequelize } from './database/database.js';
 /*
 -instalamos nodemon, el cual es un npm que permite actualizar el servidor automaticamente, apenas se modifica algo en index.js o algun archivo dentro del proyecto
 -tambien podemos agregar estas instrucciones en package.json, en la seccion   "scripts", el cual ejecuta comandos, en este caso:
@@ -13,8 +13,10 @@ import logger from './logs/logger.js';
 
 */
 
-
 async function main(){
+    //iniciar el sequelize, con la opcion force: true, obligamos al ORM a borrar las tablas existentes y crear nuevamente segun lo que se tiene modelado, con false, ya deja de reiniciar la base de datos
+    await sequelize.sync({force: false});   
+
     const port = process.env.PORT
     app.listen(port);
     logger.info(`Escuchando en puerto ${port}`);
