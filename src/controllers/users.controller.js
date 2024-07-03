@@ -5,8 +5,8 @@ import { Status } from '../constants/index.js';
 async function getUsers(req, res) {
     try {
         const users = await User.findAll({
-            attributes: ['id','username', 'password', 'status'],
-            order: [['id','DESC']],
+            attributes: ['id', 'username', 'password', 'status'],
+            order: [['id', 'DESC']],
             where: {
                 status: Status.ACTIVE,
             }
@@ -16,7 +16,7 @@ async function getUsers(req, res) {
         logger.error(error.message);
         res.status(500).json({
             message: error.message
-        });     
+        });
     }
 }
 async function createUsers(req, res) {
@@ -36,8 +36,7 @@ async function createUsers(req, res) {
             "username": "crojas",
             "password": "123"
         }
-     */ 
-
+     */
 }
 
 async function getUser(req, res) {
@@ -45,9 +44,9 @@ async function getUser(req, res) {
     try {
         const user = await User.findOne({
             attributes: ['username', 'status'],
-            where: {id },
+            where: { id },
         });
-        if(!user) return res.status(404).json({message: 'Usuario no encontrado'});
+        if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
         res.json(user);
     } catch (error) {
         logger.error(error.message);
@@ -57,8 +56,67 @@ async function getUser(req, res) {
     }
 }
 
+//forma no recomendable pero funcional
+const updateUser = async (req, res) => {
+    const { id } = req.params;
+    const { username, password } = req.body;
+    try {
+        if (!username || !password) 
+            return res.status(400).json({ message: 'Ingrese usuario y contraseña' });
+        const user = await User.update(
+            { username, password },
+            { where: { id } }
+        );
+        res.json(user);
+    } catch (error) {
+        logger.error(error.message);
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+const activateInactive = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    try {
+        if (!status) return res.status(400).json({ message: 'No existe el estatus' });
+
+        const user = await User.findByPk(id);
+
+        if (user.status === status) return res.status(409).json({ message: `El usuario ya se encuentra ${status}` });
+
+        user.status = status;
+        await user.save();
+        res.json(user);
+    } catch (error) {
+        logger.error(error.message);
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+//no es recomendable realizar el borrado fisico de registros
+const deleteUser = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await User.destroy({ where: { id: id } });
+        return res.sendStatus(204);
+    } catch (error) {
+        logger.error(error.message);
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
 export default {
     getUsers,
     createUsers,
-    getUser
+    getUser,
+    updateUser,
+    activateInactive,
+    deleteUser
 }

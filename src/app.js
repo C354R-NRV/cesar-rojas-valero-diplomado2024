@@ -12,6 +12,7 @@ const app = express();
 import usersRoutes from './routes/users.routes.js'
 import tasksRoutes from './routes/tasks.routes.js'
 import authRouters from './routes/auth.routes.js'
+import { authenticateToken } from './middlewares/authenticate.middleware.js';
 
 
 /**
@@ -24,7 +25,7 @@ app.use(express.json()); // esta linea parsea el json enviado en el cuerpo de un
  * Routes
  */
 app.use('/api/users',usersRoutes);
-app.use('/api/tasks',tasksRoutes);
+app.use('/api/tasks', authenticateToken ,tasksRoutes);  // agregando authenticateToken precio a las rutas de interes, se logra PROTEGER con el MIDDLEWARE a todas las rutas hijas
 app.use('/api/login',authRouters);
 
 //devolvemos la app inicializada

@@ -7,5 +7,11 @@ router
     .route('/')
     .get(usersController.getUsers)
     .post(usersController.createUsers);
-router.route('/:id').get(usersController.getUser)
+
+router.route('/:id').
+    get(usersController.getUser).
+    put(usersController.updateUser).
+    delete(usersController.deleteUser).
+    patch(usersController.activateInactive);
+
 export default router;
