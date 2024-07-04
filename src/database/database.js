@@ -8,9 +8,11 @@ export const sequelize = new Sequelize(
         host: process.env.DB_HOST,
         dialect: process.env.DB_DIALECT,
         logging: console.log,
-        ssl: {
-            require: true, // esto indica que la conexion requiere SSL
-            rejectUnauthorized: false // evita errores de autorizacion
+        dialectOptions: {
+            ssl: {
+                require: true, // esto indica que la conexion requiere SSL
+                rejectUnauthorized: false // evita errores de autorizacion
+            }
         }
     }
 );
