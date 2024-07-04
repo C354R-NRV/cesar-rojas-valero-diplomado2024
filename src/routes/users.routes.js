@@ -1,5 +1,6 @@
 import { Router } from "express";
 import usersController from "../controllers/users.controller.js";
+import { authenticateToken } from '../middlewares/authenticate.middleware.js'
 
 const router = Router();
 
@@ -9,9 +10,11 @@ router
     .post(usersController.createUsers);
 
 router.route('/:id').
-    get(usersController.getUser).
-    put(usersController.updateUser).
-    delete(usersController.deleteUser).
-    patch(usersController.activateInactive);
+    get(authenticateToken, usersController.getUser).
+    put(authenticateToken, usersController.updateUser).
+    delete(authenticateToken, usersController.deleteUser).
+    patch(authenticateToken, usersController.activateInactive);
+
+router.get('/:id/tasks',authenticateToken, usersController.getTasks); 
 
 export default router;

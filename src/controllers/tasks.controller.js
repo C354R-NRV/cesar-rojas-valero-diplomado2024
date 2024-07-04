@@ -109,7 +109,7 @@ const deleteTask = async (req, res) => {
             message: error.message
         });
     }
-};
+}; 
 
 export default {
     getTasks,
@@ -117,5 +117,5 @@ export default {
     getTask,
     updateTask,
     taskDone,
-    deleteTask 
+    deleteTask
 }

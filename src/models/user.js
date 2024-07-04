@@ -59,7 +59,7 @@ User.beforeCreate(async (user) => {
 });
 
 User.beforeUpdate(async (user) => {
-    try {
+    try { 
         user.password = await encriptar(user.password);
     } catch (error) {
         logger.error(error.message);
